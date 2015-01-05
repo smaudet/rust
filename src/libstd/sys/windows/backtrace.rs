@@ -22,6 +22,7 @@
 /// this takes the route of using StackWalk64 in order to walk the stack.
 
 use c_str::CString;
+use core::ops::Index;
 use intrinsics;
 use io::{IoResult, Writer};
 use libc;
@@ -361,7 +362,7 @@ pub fn write(w: &mut Writer) -> IoResult<()> {
             let bytes = cstr.as_bytes();
             match cstr.as_str() {
                 Some(s) => try!(demangle(w, s)),
-                None => try!(w.write(bytes[..bytes.len()-1])),
+                None => try!(w.write(bytes.index(&(..(bytes.len()-1))))),
             }
         }
         try!(w.write(&['\n' as u8]));
